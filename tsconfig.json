@@ -24,6 +24,9 @@
       "assets/*": [
         "assets/*"
       ],
+      "styles/*": [
+        "styles/*"
+      ],
       "hooks/*": [
         "hooks/*"
       ],
