@@ -1,17 +1,10 @@
 import React from 'react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { filmsAPI } from 'services/api'
 import { Film, FilmData } from 'types/responses/film'
 
 export const OverviewPage = () => {
-    /* const [genre, setGenre] = React.useState('') */
-    const { data: filters } = useQuery({
-        queryKey: ['filters'],
-        queryFn: filmsAPI.fetchFilters,
-        staleTime: Infinity,
-    })
-
-    console.log(filters)
+    const [genre, setGenre] = React.useState<'' | number>('')
 
     const {
         data,
@@ -21,10 +14,10 @@ export const OverviewPage = () => {
         isFetching,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ['films'],
-        queryFn: filmsAPI.fetchTopFilms,
+        queryKey: ['films', genre],
+        queryFn: ({ pageParam = { curPage: 1, genre } }) => filmsAPI.fetchTopFilms(pageParam),
         getNextPageParam: (lastPage: FilmData, pages: FilmData[]) => {
-            return pages.length !== lastPage.totalPages ? pages.length + 1 : false
+            return pages.length !== lastPage.totalPages ? { genre, curPage: pages.length + 1 } : false
         },
         staleTime: Infinity,
     })
@@ -37,14 +30,16 @@ export const OverviewPage = () => {
         </React.Fragment>
     ))
 
-
     if (isLoading) return <div>Loading...</div>
 
     return (
         <div>
-            <div>
-
-            </div>
+            <button onClick={() => setGenre('')}>
+                all
+            </button>
+            <button onClick={() => setGenre(11)}>
+                action
+            </button>
             <div>
                 {filmsResult}
             </div>

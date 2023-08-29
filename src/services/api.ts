@@ -14,8 +14,8 @@ const instance = axios.create({
 })
 
 export const filmsAPI = {
-    async fetchTopFilms({ pageParam = 1, genre = '' }): Promise<FilmData> {
-        const response: AxiosResponse<FilmData> = await instance.get<FilmData>(`films?page=${pageParam}&genres=${genre}`)
+    async fetchTopFilms({ genre, curPage }: { genre: '' | number; curPage: number }): Promise<FilmData> {
+        const response: AxiosResponse<FilmData> = await instance.get<FilmData>(`films?page=${curPage}&genres=${genre}`)
         return response.data
     },
     async fetchFilters(): Promise<Filters> {
